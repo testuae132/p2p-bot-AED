@@ -76,8 +76,8 @@ async def main_loop():
                 message += f"✅ Best Price: {offers[0]['price']} AED\n\n"
 
                 for i, offer in enumerate(offers, start=1):
-                    min_aed = f"{offer['min_limit']:.0f}"
-                    max_aed = f"{offer['max_limit']:.0f}"
+                    min_aed = f"{offer['min_limit']:,.0f}"
+                    max_aed = f"{offer['max_limit']:,.0f}"
                     message += f"{i}. 💵 {offer['price']} AED | Min: {min_aed} | Max: {max_aed} AED\n"
             else:
                 message += "⚠️ No offers found.\n"
