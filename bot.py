@@ -44,8 +44,8 @@ def fetch_offers(trade_type, pay_types=None, top_n=10):
             adv = item["adv"]
             price = float(adv["price"])
             # minSingleTransAmount and maxSingleTransAmount are already in AED
-            min_limit = float(adv.get("minSingleTransAmount", 0))
-            max_limit = float(adv.get("maxSingleTransAmount", 0))
+            min_limit = float(adv.get("minSingleTransAmount", 0)) * 1000
+            max_limit = float(adv.get("dynamicMaxSingleTransAmount", 0)) * 1000
             offers.append({
                 "price": price,
                 "min_limit": min_limit,
