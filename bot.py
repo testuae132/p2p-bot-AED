@@ -14,6 +14,15 @@ P2P_URL = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
 PRICE_URL = "https://api.binance.com/api/v3/ticker/price"
 HEADERS = {"Content-Type": "application/json"}
 
+# ====== Human readable numbers ======
+def fmt(n):
+    if n >= 1_000_000:
+        return f"{n / 1_000_000:.1f}M".rstrip('0').rstrip('.')+"M" if False else f"{n/1_000_000:g}M"
+    elif n >= 1_000:
+        return f"{n/1_000:g}K"
+    else:
+        return f"{n:g}"
+
 # ====== Fetch Live USDT/AED Price ======
 def fetch_live_price():
     try:
@@ -43,9 +52,8 @@ def fetch_offers(trade_type, pay_types=None, top_n=10):
         for item in data["data"]:
             adv = item["adv"]
             price = float(adv["price"])
-            # minSingleTransAmount and maxSingleTransAmount are already in AED
-            min_limit = float(adv.get("minSingleTransAmount", 0)) * 1000
-            max_limit = float(adv.get("dynamicMaxSingleTransAmount", 0)) * 1000
+            min_limit = float(adv.get("minSingleTransAmount", 0))
+            max_limit = float(adv.get("dynamicMaxSingleTransAmount", 0))
             offers.append({
                 "price": price,
                 "min_limit": min_limit,
@@ -76,9 +84,7 @@ async def main_loop():
                 message += f"✅ Best Price: {offers[0]['price']} AED\n\n"
 
                 for i, offer in enumerate(offers, start=1):
-                    min_aed = f"{offer['min_limit']:,.0f}"
-                    max_aed = f"{offer['max_limit']:,.0f}"
-                    message += f"{i}. 💵 {offer['price']} AED | Min: {min_aed} | Max: {max_aed} AED\n"
+                    message += f"{i}. 💵 {offer['price']} AED | Min: {offer['min_limit']:,.0f} | Max: {offer['max_limit']:,.0f} AED\n"
             else:
                 message += "⚠️ No offers found.\n"
 
